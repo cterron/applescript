@@ -1,0 +1,35 @@
+-- This script will loop if Spotify is running, showing a notification each time a new 
+-- track is playing
+
+on getCurrentlyPlayingTrack()
+	tell application "Spotify"
+		set currentArtist to artist of current track as string
+		set currentTrack to name of current track as string
+		set currentAlbum to album of current track as string
+		set theText to currentArtist & " - " & ¬
+			currentAlbum & " - " & ¬
+			currentTrack
+		return theText
+	end tell
+end getCurrentlyPlayingTrack
+
+on run
+	set currentTrackID to ""
+	repeat while application "Spotify" is running
+		tell application "Spotify"
+			if player state is stopped or player state is paused then
+				delay 2
+			else
+				set tmpTrackID to id of current track
+				if tmpTrackID = currentTrackID then
+					delay 2
+				else
+					display notification my getCurrentlyPlayingTrack()
+					set currentTrackID to tmpTrackID
+				end if
+			end if
+		end tell
+	end repeat
+end run
+
+
